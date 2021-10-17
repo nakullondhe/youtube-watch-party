@@ -1,10 +1,9 @@
 import React from "react";
 import { Box } from "@mui/system";
-import { Button, IconButton, TextField, Typography } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import { makeStyles } from "@mui/styles";
 
-const ChatInput = () => {
+const ChatInput = ({message, setMessage, onSend}) => {
   return (
     <Box sx={{ padding: "10px", display: "flex",alignItems: 'center', backgroundColor: '#202020' }}>
       <TextField
@@ -13,8 +12,10 @@ const ChatInput = () => {
         inputProps={{ style: { color: "white", borderBottom: 'green'} }}
         fullWidth
         placeholder="say something..."
+        onChange={e => setMessage(e.target.value)}
+        value={message}
       />
-      <IconButton>
+      <IconButton onClick={onSend}>
         <SendIcon color="primary"/>
       </IconButton>
     </Box>
