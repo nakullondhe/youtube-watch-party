@@ -30,14 +30,17 @@ export const createRoom = async (name) => {
   const docRef = await addDoc(collection(db, "room"), {
     play: false,
   });
-  const newRef = await addDoc(collection(db, "room", docRef.id, "watchers"), {
-    name,
-  });
-  if(newRef.id) {
+  // const newRef = await addDoc(collection(db, "room", docRef.id, "watchers"), {
+  //   name,
+  // });
+  // if(newRef.id) {
     return {
       success : true,
       id: docRef.id
     }
-  }
+  // }
 };
 
+export const useLocal = () => {
+  return JSON.parse(window.localStorage.getItem('user'));
+}

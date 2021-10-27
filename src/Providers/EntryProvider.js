@@ -8,7 +8,7 @@ const EntryProvider = ({children}) => {
   const props = {
     loading, setLoading
   }
-  return ( 
+  return (
     <EntryContext.Provider value={props}>
       {children}
     </EntryContext.Provider>

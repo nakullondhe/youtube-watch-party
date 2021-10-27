@@ -1,35 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Paper, TextField, Typography } from "@mui/material";
-import { addDoc, collection } from "firebase/firestore";
 import { Box } from "@mui/system";
 import logo from "./Assets/logo.png";
-import { db } from "./firebase";
-import { createRoom, generateName } from "./Providers/Service";
-import { Redirect } from "react-router";
-import { Link } from "react-router-dom";
+import { createRoom } from "./Providers/Service";
 
 const Entry = () => {
   const [text, setText] = useState("");
-  const [name, setName] = useState('');
-  const [redirect, setRedirect] = useState({
-    action: false,
-    id: '',
-  })
 
   const onCreateRoom = async () => {
-    const room = await createRoom(name);
-    window.localStorage.setItem('user', name)
+    const room = await createRoom();
     if(room.success) {
+      const user = {
+        roomId: room.id,
+        owner: true,
+      }
+      window.localStorage.setItem('user', JSON.stringify(user))
       window.location.href = `http://localhost:3000/${room.id}`
     }
   }
 
-
-  useEffect(() => {
-    generateName().then(res => {
-      setName(res ? res[0] : '')
-    })
-  }, []);
   return (
     <Box
       sx={{
@@ -67,7 +56,6 @@ const Entry = () => {
           OR
         </Typography>
         <TextField
-          onChange={(e) => setText(e.target.value)}
           inputProps={{
             style: {
               color: "white",
@@ -88,12 +76,13 @@ const Entry = () => {
           }}
           variant="outlined"
           placeholder="Enter Room Id"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
         <Button fullWidth variant="contained">
           Join Room
         </Button>
       </Paper>
-      {/* {redirect && <Redirect to={`/${redirect.id}`} />} */}
     </Box>
   );
 };

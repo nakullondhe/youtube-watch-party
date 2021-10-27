@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 // Initialize Firebase
-
 import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
+
 const firebaseApp = initializeApp({
   apiKey: "AIzaSyCVaunx2GrotoIMoL-JGYeOthldLHXJR8s",
   authDomain: "watch-party-f78a9.firebaseapp.com",

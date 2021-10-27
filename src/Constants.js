@@ -4,9 +4,21 @@ export const Constants = {
     playerVars: {
       disablekb: 1,
       modestbranding: 1,
+      rel: 0
     },
   },
-  api_key: '6f696b4f05294b71bfd59897c3f3ce19'
+  api_key: '6f696b4f05294b71bfd59897c3f3ce19',
+  configuration: {
+    iceServers: [
+      {
+        urls: [
+          "stun:stun1.l.google.com:19302",
+          "stun:stun2.l.google.com:19302",
+        ],
+      },
+    ],
+    iceCandidatePoolSize: 10,
+  }
 }
 
 export default Constants;

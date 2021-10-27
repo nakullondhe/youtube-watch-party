@@ -3,10 +3,12 @@ import React, { createContext, useContext, useState } from "react";
 const RoomContext = createContext(null);
 
 const RoomProvider = ({ children }) => {
+  const [scriptLoad, setScriptLoad] = useState(false);
   const [input, setInput] = useState("");
+  const [player, setPlayer] = useState(null);
   const [room, setRoom] = useState({
-    room: Object,
-    user: '',
+    room: null,
+    user: "",
   });
   const [chats, setChats] = useState([]);
 
@@ -17,6 +19,8 @@ const RoomProvider = ({ children }) => {
     setRoom,
     chats,
     setChats,
+    player,
+    setPlayer,
   };
   return <RoomContext.Provider value={props}>{children}</RoomContext.Provider>;
 };

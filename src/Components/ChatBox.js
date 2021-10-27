@@ -1,19 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import {
   addDoc,
   collection,
-  doc,
-  getDocs,
   onSnapshot,
   orderBy,
+  query,
   serverTimestamp,
 } from "@firebase/firestore";
 import { Typography } from "@mui/material";
-import { borderRadius, Box } from "@mui/system";
+import { Box } from "@mui/system";
 import { db } from "../firebase";
 import { useRoom } from "../Providers/RoomProvider";
-import ChatInput from "./ChatInput";
-import Message from "./Message";
+import {ChatInput, Message} from "./index";
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
@@ -23,19 +22,6 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
     overflowY: "auto",
-    // '&::-webkit-scrollbar': {
-    //   width: '0.5em',
-    //   borderRadius: '10px'
-    // },
-    // '&::-webkit-scrollbar-track': {
-    //   boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-    //   webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-
-    // },
-    // '&::-webkit-scrollbar-thumb': {
-    //   backgroundColor: 'red',
-
-    // }
   }
 })
 
@@ -43,12 +29,12 @@ const ChatBox = ({ roomId }) => {
   const classes = useStyles();
   const { chats, setChats } = useRoom();
   const [message, setMessage] = useState("");
-  const user = window.localStorage.getItem("user");
+  const user = JSON.parse(window.localStorage.getItem("user"));
 
   const onSend = () => {
     if (message !== "") {
       addDoc(collection(db, "room", roomId, "chats"), {
-        name: user,
+        name: user.name,
         message: message,
         timestamp: serverTimestamp(),
       });
@@ -57,21 +43,14 @@ const ChatBox = ({ roomId }) => {
   };
 
   useEffect(() => {
+    const ref = collection(db, "room", roomId, "chats");
+    const allRef = query(ref, orderBy('timestamp', 'asc'));
     onSnapshot(
-      collection(db, "room", roomId, "chats"),
-      orderBy("timestamp", "asc"),
-      (docs) => {
+      allRef, (docs) => {
         setChats(docs.docs.map((doc) => doc.data()));
       }
     );
   }, []);
-
-  // useEffect(() => {
-  //   addDoc(collection(db, "room", roomId, "chats"), {
-  //     server: true,
-  //     message: `${window.localStorage.user} joined the chat`
-  //   })
-  // }, [])
 
   return (
     <Box
@@ -90,13 +69,6 @@ const ChatBox = ({ roomId }) => {
       </Box>
       <Box
         className={classes.chat_box}
-        // sx={{
-        //   height: "300px",
-        //   padding: "0 20px",
-        //   display: "flex",
-        //   flexDirection: "column",
-        //   overflowY: "scroll",
-        // }}
       >
         {chats.length !== 0 &&
           chats.map((chat, index) => <Message chat={chat} key={index} />)}
