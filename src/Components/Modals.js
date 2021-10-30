@@ -7,8 +7,6 @@ import {
   Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { useLocal } from "../Providers/Service";
 
 export const GetNameModal = ({ open, onClose, roomId }) => {
   const [state, setState] = useState("");

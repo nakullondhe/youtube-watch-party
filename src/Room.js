@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
 import "./Room.css";
@@ -10,50 +11,22 @@ import { doc, onSnapshot, updateDoc } from "@firebase/firestore";
 import { db } from "./firebase";
 import { useRoom } from "./Providers/RoomProvider";
 import { GetNameModal } from "./Components/Modals";
-import useScript from "./Providers/LoadScript";
+import socket from "./Socket";
+import YoutubePlayer from "./Components/YoutubePlayer";
+const user = JSON.parse(window.localStorage.getItem("user"));
 
 const Room = () => {
   const { roomId } = useParams();
-  const { room, setRoom, player, setPlayer} = useRoom();
+  const { room, setRoom, player, gap, setGap } = useRoom();
   const [modal, setModal] = useState(true);
-  const status = useScript('https://www.youtube.com/iframe_api');
-
-  const changeVideoState = (e) => {
-    const roomRef = doc(db, "room", roomId);
-    setPlayer(e.target);
-    updateDoc(roomRef, {
-      play: e.data === 1 ? true : false,
-    });
-  };
-
-  // const createFrame = async () => {
-  //   let newPlayer = new YT.Player("player", {
-  //     height: "400",
-  //     width: "640",
-  //     playerVars: {
-  //       playsinline: 1,
-  //       disablekb: 1,
-  //       modestbranding: 1,
-  //       rel: 0,
-  //     },
-  //     events: {
-  //       onStateChange: changeVideoState,
-  //     },
-  //   });
-  //   setPlayer(await newPlayer);
-  // };
 
   useEffect(() => {
-    const user = JSON.parse(window.localStorage.getItem("user"));
+    socket.emit("join", { roomId, name: user.name });
     onSnapshot(doc(db, "room", roomId), (res) => {
       let data = res.data();
-      if (data !== room) {
-        setRoom({ ...room, room: data });
-        // if(data.videoId !== room.room.videoId) {
-
-        // }
+      if (JSON.stringify(data) !== JSON.stringify(room)) {
+        setRoom(data);
         if (!user.owner && player) {
-          console.log(data.play);
           if (data.play) {
             player?.playVideo();
           } else if (!data.play) {
@@ -64,50 +37,60 @@ const Room = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (user.owner) {
+      if (room?.play && !gap) {
+        let inter = setInterval(() => {
+          let time = player?.getCurrentTime();
+          socket.emit("time-counter", { time });
+        }, 1000);
+        setGap(inter);
+      } else if (room && room.play === false) {
+        clearInterval(gap);
+        setGap(null);
+      }
+    }
 
-
-  console.log({ player });
+    if (room && room.play && !user.owner) {
+      socket.on("timer-up", (data) => console.log(data));
+    }
+  }, [room]);
+  console.log(gap);
   return (
-    <div className="App">
-      <Header />
-      <Container sx={{ width: "100%", padding: "0 !important" }}>
-        <Grid
-          container
-          sx={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "space-between",
-            marginTop: 4,
-          }}
-        >
-          <Grid item sx={{ paddingRight: 2 }} xs={8}>
-            {/* <div id="player" className="yt_player" /> */}
+    <>
+      {room && room.videoId && (
+        <div className="App bb">
+          <Header />
+          <Container sx={{ width: "100%", padding: "0 !important" }}>
+            <Grid
+              container
+              sx={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                marginTop: 4,
+              }}
+            >
+              <Grid item sx={{ paddingRight: 2 }} xs={8}>
+                <YoutubePlayer room={room} />
+              </Grid>
 
-                       <YouTube
-              videoId={room?.room?.videoId}
-              className="yt_player"
-              opts={Constants.react_yt_opts}
-              onReady={(e) => setPlayer(e.target)}
-              onPlay={(e) => setPlayer(e.target)}
-              onPause={(e) => setPlayer(e.target)}
-              onStateChange={(e) => changeVideoState(e)}
-              // onPlay={(p) => console.log({p})}
-            />
-          </Grid>
-          <Grid item sx={{}} xs={4}>
-            <ChatBox roomId={roomId} />
-          </Grid>
-        </Grid>
-      </Container>
+              <Grid item sx={{}} xs={4}>
+                <ChatBox roomId={roomId} />
+              </Grid>
+            </Grid>
+          </Container>
 
-      <GetNameModal
-        roomId={roomId}
-        open={modal}
-        onClose={() => setModal(false)}
-      />
+          <GetNameModal
+            roomId={roomId}
+            open={modal}
+            onClose={() => setModal(false)}
+          />
 
-      <Footer />
-    </div>
+          <Footer />
+        </div>
+      )}
+    </>
   );
 };
 

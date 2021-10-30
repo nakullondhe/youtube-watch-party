@@ -9,15 +9,15 @@ const Entry = () => {
 
   const onCreateRoom = async () => {
     const room = await createRoom();
-    if(room.success) {
+    if (room.success) {
       const user = {
         roomId: room.id,
         owner: true,
-      }
-      window.localStorage.setItem('user', JSON.stringify(user))
-      window.location.href = `http://localhost:3000/${room.id}`
+      };
+      window.localStorage.setItem("user", JSON.stringify(user));
+      window.location.href = `http://localhost:3000/${room.id}`;
     }
-  }
+  };
 
   return (
     <Box
