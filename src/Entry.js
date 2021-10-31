@@ -3,6 +3,7 @@ import { Button, Paper, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import logo from "./Assets/logo.png";
 import { createRoom } from "./Providers/Service";
+import Constants from './Constants';
 
 const Entry = () => {
   const [text, setText] = useState("");
@@ -15,7 +16,7 @@ const Entry = () => {
         owner: true,
       };
       window.localStorage.setItem("user", JSON.stringify(user));
-      window.location.href = `http://localhost:3000/${room.id}`;
+      window.location.href = `${Constants.host}/${room.id}`;
     }
   };
 

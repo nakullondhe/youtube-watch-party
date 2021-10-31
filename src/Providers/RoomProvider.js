@@ -7,7 +7,9 @@ const RoomProvider = ({ children }) => {
   const [player, setPlayer] = useState(null);
   const [gap, setGap] = useState(null);
   const [room, setRoom] = useState(null);
+  const [timer, setTimer] = useState();
   const [chats, setChats] = useState([]);
+  const [play, setPlay] = useState(false);
 
   const props = {
     input,
@@ -20,6 +22,10 @@ const RoomProvider = ({ children }) => {
     setPlayer,
     gap,
     setGap,
+    timer,
+    setTimer,
+    play,
+    setPlay
   };
   return <RoomContext.Provider value={props}>{children}</RoomContext.Provider>;
 };

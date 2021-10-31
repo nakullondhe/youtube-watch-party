@@ -7,12 +7,12 @@ import {
   DialogActions,
   DialogTitle,
 } from "@mui/material";
-import logo from "../Assets/logo.png";
 import { useRoom } from "../Providers/RoomProvider";
 import { getVideoID, useLocal } from "../Providers/Service";
 import { useParams } from "react-router";
 import { doc, updateDoc } from "@firebase/firestore";
 import { db } from "../firebase";
+const logo = "https://cdn.discordapp.com/attachments/904340218168086598/904340394718953492/logo.png";
 
 const Header = () => {
   const { roomId } = useParams();
@@ -28,13 +28,6 @@ const Header = () => {
       setInput("");
     });
   };
-
-  // const closeRoom = async () => {
-  //   const deleted = await deleteDoc(doc(db, "room", "roomId"))
-  //     // window.localStorage.removeItem("user");
-  //     // window.location.href = "http://localhost:3000/";
-  //   console.log(await deleted)
-  // };
 
   return (
     <Box

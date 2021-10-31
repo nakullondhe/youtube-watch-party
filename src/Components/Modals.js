@@ -10,32 +10,39 @@ import { useEffect, useState } from "react";
 
 export const GetNameModal = ({ open, onClose, roomId }) => {
   const [state, setState] = useState("");
-
+  
   const onSubmit = () => {
     let user = JSON.parse(window.localStorage.getItem("user"));
-    if (user) {
+    if (user && user.owner) {
       user.name = state;
-      window.localStorage.setItem("user", JSON.stringify(user));
     } else {
-      user = {
-        roomId,
-        name: state,
-        owner: false,
-      };
-      window.localStorage.setItem("user", JSON.stringify(user));
+      user.name = state;
+      user.owner = false;
     }
+    window.localStorage.setItem("user", JSON.stringify(user));
     onClose();
   };
-
+  
   useEffect(() => {
     let user = JSON.parse(window.localStorage.getItem("user"));
-    if (user && user.name) {
+    if(user && !user.owner) {
+      if(user.roomId !== roomId) {
+        user.roomId = roomId;
+        delete user.name;
+        window.localStorage.setItem("user", JSON.stringify(user));
+      } else if (user && user.name) {
+        onClose();
+      }
+
+    }
+    if(user.name) {
       onClose();
     }
+  
   });
   
   return (
-    <Dialog maxWidth="md" open={open} sx={{}}>
+    <Dialog maxWidth="md" open={open} >
       <DialogTitle>Enter your name</DialogTitle>
       <DialogContent>
         <TextField

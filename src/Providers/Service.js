@@ -31,6 +31,7 @@ export const generateName = async () => {
 export const createRoom = async (name) => {
   const docRef = await addDoc(collection(db, "room"), {
     play: false,
+    time: 0
   });
   return {
     success: true,
