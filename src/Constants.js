@@ -11,7 +11,7 @@ export const Constants = {
       disablekb: 1,
       modestbranding: 1,
       rel: 0,
-      controls: 0
+      controls: 1
     },
   },
   host: 'http://localhost:3000'

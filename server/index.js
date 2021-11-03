@@ -5,19 +5,35 @@ const cors = require('cors')
 const app = express();
 const server = http.createServer(app)
 
-
-global.server = server;
-
-app.use(cors({
-  origin: '*'
-}));
+app.use(cors());
 
 app.get('/', (req,res) => {
   res.send("message: 'boom bam'")  
 })
 
-const io = require('./websocket')
+const io = require('socket.io')(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
+io.on('connect', socket => {
+  console.log('conn')
+  socket.on('disconnect', function(){
+    console.log('beem')
+    });
+  socket.on('join', ({roomId, name})  => {
+    console.log({roomId, name})
+    socket.join(roomId);
+    socket.roomId = roomId;
+  })
+  socket.on('time-counter', data => {
+    console.log(data)
+    socket.emit('timer-up', data)
+  })
+  
+})
 
 const PORT = 5000;
 

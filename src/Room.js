@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
@@ -19,16 +20,21 @@ const Room = () => {
   const [modal, setModal] = useState(true);
 
   useEffect(() => {
-    socket.emit("join", { roomId, name: user.name });
+    socket.emit('join', { roomId, name: user.name });
     onSnapshot(doc(db, "room", roomId), (res) => {
       let data = res.data();
-      // if(!res.exists()) {
-      //   window.location.href = `${Constants.host}/not_found`
-      // }
       if (JSON.stringify(data) !== JSON.stringify(room)) {
         setRoom(data);
+        if (!user.owner && player) {
+          if (data.play) {
+            player?.playVideo();
+          } else if (!data.play) {
+            player?.pauseVideo();
+          }
+        }
       }
     });
+    console.log(socket)
   }, []);
 
   useEffect(() => {

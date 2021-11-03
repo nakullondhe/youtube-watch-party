@@ -6,7 +6,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const GetNameModal = ({ open, onClose, roomId }) => {
   const [state, setState] = useState("");
