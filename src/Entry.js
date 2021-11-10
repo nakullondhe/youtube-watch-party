@@ -16,7 +16,7 @@ const Entry = () => {
         owner: true,
       };
       window.localStorage.setItem("user", JSON.stringify(user));
-      window.location.href = `${Constants.host}/${room.id}`;
+      window.location.href = `${Constants.hostProd}/${room.id}`;
     }
   };
 

@@ -18,9 +18,19 @@ const Room = () => {
   const { roomId } = useParams();
   const { room, setRoom, player, gap, setGap } = useRoom();
   const [modal, setModal] = useState(true);
+  
+  useEffect(() => {
+    if(user ===  null) {
+      let temp_user = {
+        roomId,
+        owner: false
+      }
+      window.localStorage.setItem('user', JSON.stringify(temp_user));
+    }  
+    socket.emit('join', { roomId, name: user.name });
+  }, [])
 
   useEffect(() => {
-    socket.emit('join', { roomId, name: user.name });
     onSnapshot(doc(db, "room", roomId), (res) => {
       let data = res.data();
       if (JSON.stringify(data) !== JSON.stringify(room)) {
@@ -34,7 +44,6 @@ const Room = () => {
         }
       }
     });
-    console.log(socket)
   }, []);
 
   useEffect(() => {

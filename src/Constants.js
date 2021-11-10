@@ -14,7 +14,8 @@ export const Constants = {
       controls: 1
     },
   },
-  host: 'http://localhost:3000'
+  host: 'http://localhost:3000',
+  hostProd: 'https://watch-party-f78a9.web.app/'
 }
 
 export default Constants;

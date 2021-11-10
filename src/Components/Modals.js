@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 
 export const GetNameModal = ({ open, onClose, roomId }) => {
   const [state, setState] = useState("");
-  
+
   const onSubmit = () => {
     let user = JSON.parse(window.localStorage.getItem("user"));
     if (user && user.owner) {
@@ -22,27 +22,25 @@ export const GetNameModal = ({ open, onClose, roomId }) => {
     window.localStorage.setItem("user", JSON.stringify(user));
     onClose();
   };
-  
+
   useEffect(() => {
     let user = JSON.parse(window.localStorage.getItem("user"));
-    if(user && !user.owner) {
-      if(user.roomId !== roomId) {
+    if (user && !user.owner) {
+      if (user.roomId !== roomId) {
         user.roomId = roomId;
         delete user.name;
         window.localStorage.setItem("user", JSON.stringify(user));
       } else if (user && user.name) {
         onClose();
       }
-
     }
-    if(user.name) {
+    if (user.name) {
       onClose();
     }
-  
   });
-  
+
   return (
-    <Dialog maxWidth="md" open={open} >
+    <Dialog maxWidth="md" open={open}>
       <DialogTitle>Enter your name</DialogTitle>
       <DialogContent>
         <TextField

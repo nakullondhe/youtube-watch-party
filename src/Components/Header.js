@@ -12,7 +12,8 @@ import { getVideoID, useLocal } from "../Providers/Service";
 import { useParams } from "react-router";
 import { doc, updateDoc } from "@firebase/firestore";
 import { db } from "../firebase";
-const logo = "https://cdn.discordapp.com/attachments/904340218168086598/904340394718953492/logo.png";
+const logo =
+  "https://cdn.discordapp.com/attachments/904340218168086598/904340394718953492/logo.png";
 
 const Header = () => {
   const { roomId } = useParams();
@@ -63,14 +64,16 @@ const Header = () => {
         <Button variant="contained" color="primary">
           Invite
         </Button>
-        {user.owner && <Button
-          onClick={() => setModal(true)}
-          variant="contained"
-          color="error"
-          sx={{ marginLeft: 2 }}
-        >
-          Close Room
-        </Button>}
+        {user.owner && (
+          <Button
+            onClick={() => setModal(true)}
+            variant="contained"
+            color="error"
+            sx={{ marginLeft: 2 }}
+          >
+            Close Room
+          </Button>
+        )}
       </Box>
       <Dialog open={modal}>
         <DialogTitle id="alert-dialog-title">Close Room</DialogTitle>
